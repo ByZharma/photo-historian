@@ -1,0 +1,50 @@
+name: Video pipeline (images + voice)
+
+on:
+  workflow_dispatch:
+    inputs:
+      voice:
+        description: "Голос (ru-RU-DmitryNeural, ru-RU-SvetlanaNeural, ru-RU-DariyaNeural)"
+        default: "ru-RU-DmitryNeural"
+      rate:
+        description: "Скорость речи, например -5% или +10%"
+        default: "+0%"
+      images:
+        description: "Генерировать картинки?"
+        type: boolean
+        default: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    defaults:
+      run:
+        working-directory: video-pipeline
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install edge-tts==7.0.2
+
+      - name: Voice (Edge TTS, free)
+        run: |
+          mkdir -p output
+          if [ -s project/voice.txt ]; then
+            edge-tts --file project/voice.txt --voice "${{ inputs.voice }}" --rate="${{ inputs.rate }}" \
+              --write-media output/voice.mp3 --write-subtitles output/voice.srt
+          else
+            echo "project/voice.txt is empty, skipping voice"
+          fi
+
+      - name: Images (Pollinations, free)
+        if: ${{ inputs.images }}
+        run: python generate_images.py
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: result
+          path: video-pipeline/output/
+          retention-days: 30

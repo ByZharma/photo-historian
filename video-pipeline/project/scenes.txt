@@ -1,0 +1,4 @@
+# Одна строка = одна картинка (001.jpg, 002.jpg ...). Лучше писать на английском.
+# Строки с # пропускаются. Замените примеры на свои 130 сцен.
+A steam locomotive arriving at a small wooden railway station, 1900s
+A crowded city market street with horse carts and merchants, early 20th century

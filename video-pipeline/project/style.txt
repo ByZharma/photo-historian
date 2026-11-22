@@ -1,0 +1,2 @@
+# Стиль, который добавляется к каждой сцене, чтобы все 130 картинок были в одном стиле.
+cinematic documentary style, realistic, soft natural light, film grain, 16:9
